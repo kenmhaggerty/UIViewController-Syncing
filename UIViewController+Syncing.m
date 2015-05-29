@@ -183,18 +183,18 @@ static char viewForSyncViewKey;
     [self.syncViewController setSyncViewProgress:progress animated:animated];
 }
 
-- (void)showCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock
+- (void)showSyncViewCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeUnspecified customCategories:@[AKD_UI] message:nil];
     
-    [self.syncViewController showCancelButton:animated withCompletionBlock:completionBlock];
+    [self.syncViewController showSyncViewCancelButton:animated withCompletionBlock:completionBlock];
 }
 
-- (void)hideCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock
+- (void)hideSyncViewCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeUnspecified customCategories:@[AKD_UI] message:nil];
     
-    [self.syncViewController hideCancelButton:animated withCompletionBlock:completionBlock];
+    [self.syncViewController hideSyncViewCancelButton:animated withCompletionBlock:completionBlock];
 }
 
 - (void)cancelSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText completionType:(SyncViewCompletionType)completionType alertController:(UIAlertController *)alertController delay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock

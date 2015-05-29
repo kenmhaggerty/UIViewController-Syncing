@@ -37,8 +37,8 @@
 - (void)showSyncViewProgress;
 - (void)hideSyncViewProgress;
 - (void)setSyncViewProgress:(float)progress animated:(BOOL)animated;
-- (void)showCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock;
-- (void)hideCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock;
+- (void)showSyncViewCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock;
+- (void)hideSyncViewCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock;
 - (void)cancelSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText completionType:(SyncViewCompletionType)completionType alertController:(UIAlertController *)alertController delay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock;
 
 @end

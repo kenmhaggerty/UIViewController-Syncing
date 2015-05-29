@@ -202,7 +202,7 @@
     if (showProgress) [self showSyncViewProgress];
     else [self hideSyncViewProgress];
     if (showProgress) [self showSyncViewProgress];
-    [self hideCancelButton:NO withCompletionBlock:nil];
+    [self hideSyncViewCancelButton:NO withCompletionBlock:nil];
     [self setStatusBarStyle:[AKSystemInfo statusBarStyle]];
     [UIView animateWithDuration:ANIMATION_DURATION delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
         [AKSystemInfo setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
@@ -210,7 +210,7 @@
     [UIView animateWithDuration:ANIMATION_DURATION animations:^{
         [self.view setAlpha:1.0];
     } completion:^(BOOL finished){
-        if (showCancel) [self showCancelButton:YES withCompletionBlock:nil];
+        if (showCancel) [self showSyncViewCancelButton:YES withCompletionBlock:nil];
     }];
 }
 
@@ -235,7 +235,7 @@
     [self.progressView setProgress:progress animated:animated];
 }
 
-- (void)showCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock
+- (void)showSyncViewCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeUnspecified customCategories:@[AKD_UI] message:nil];
     
@@ -254,7 +254,7 @@
     }];
 }
 
-- (void)hideCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock
+- (void)hideSyncViewCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeUnspecified customCategories:@[AKD_UI] message:nil];
     
@@ -276,7 +276,7 @@
     
     if ((!alertController) && (delay == 0.0))
     {
-        [self hideCancelButton:YES withCompletionBlock:^{
+        [self hideSyncViewCancelButton:YES withCompletionBlock:^{
             [self dismissWithDelay:delay completionBlock:completionBlock];
         }];
         return;
@@ -314,7 +314,7 @@
             break;
     }
     [self.iconView setAlpha:1.0];
-    [self hideCancelButton:YES withCompletionBlock:^{
+    [self hideSyncViewCancelButton:YES withCompletionBlock:^{
         if (!alertController)
         {
             [self dismissWithDelay:delay completionBlock:completionBlock];
@@ -375,7 +375,7 @@
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeAction customCategories:nil message:nil];
     
-    [self.delegate syncViewCancelButtonWasTapped:self];
+    if ([self.delegate respondsToSelector:@selector(syncViewCancelButtonWasTapped:)]) [self.delegate syncViewCancelButtonWasTapped:self];
 }
 
 - (void)dismissWithDelay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock
