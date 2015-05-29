@@ -1,9 +1,9 @@
 //
-//  UIViewController+Syncing.h
+//  SyncViewController.h
 //  UIViewController+Syncing
 //
-//  Created by Ken M. Haggerty on 10/9/13.
-//  Copyright (c) 2013 Eureka Valley Co. All rights reserved.
+//  Created by Ken M. Haggerty on 5/28/15.
+//  Copyright (c) 2015 MCMDI. All rights reserved.
 //
 
 #pragma mark - // NOTES (Public) //
@@ -11,25 +11,38 @@
 #pragma mark - // IMPORTS (Public) //
 
 #import <UIKit/UIKit.h>
-#import "SyncViewController.h"
 
 #pragma mark - // PROTOCOLS //
 
+@class SyncViewController;
+
+@protocol SyncViewDelegate <NSObject>
+@required
+- (void)syncViewCancelButtonWasTapped:(SyncViewController *)sender;
+@end
+
 #pragma mark - // DEFINITIONS (Public) //
 
-@interface UIViewController (Syncing) <SyncViewDelegate>
-@property (nonatomic, strong, readonly) SyncViewController *syncViewController;
-@property (nonatomic, readonly) BOOL isSyncing;
+typedef enum {
+    SyncViewBlank,
+    SyncViewComplete,
+    SyncViewWarning,
+    SyncViewQuestion,
+    SyncViewFailed,
+    SyncViewCancelled
+} SyncViewCompletionType;
 
-// PROPERTIES //
+@interface SyncViewController : UIViewController
+@property (nonatomic, strong) id <SyncViewDelegate> delegate;
 
-- (void)setViewForSyncView:(UIView *)view;
+// SETTERS //
+
 - (void)setSyncViewBackgroundColor:(UIColor *)color;
 - (void)setSyncViewTextColor:(UIColor *)color;
 - (void)setSyncViewPrimaryText:(NSString *)text;
 - (void)setSyncViewSecondaryText:(NSString *)text;
-- (void)setSyncViewCancelButtonColor:(UIColor *)color;
-- (void)setSyncViewCancelButtonText:(NSString *)text;
+- (void)setSyncViewButtonColor:(UIColor *)color;
+- (void)setSyncViewButtonText:(NSString *)text;
 
 // ACTIONS //
 
