@@ -39,6 +39,7 @@
 #define DEFAULT_BUTTON_TEXT @"Cancel"
 
 #define ANIMATION_DURATION 0.18
+#define ANIMATION_DURATION_FAST ANIMATION_DURATION/1.66
 
 @interface SyncViewController ()
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicatorView;
@@ -52,6 +53,7 @@
 - (void)setup;
 - (void)teardown;
 - (IBAction)actionButtonCancel:(id)sender;
+- (void)dismissWithDelay:(NSTimeInterval)delay animated:(BOOL)animated completionBlock:(void (^)(void))completionBlock;
 @end
 
 @implementation SyncViewController
@@ -188,7 +190,7 @@
 
 #pragma mark - // PUBLIC METHODS (Actions) //
 
-- (void)startSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText progressView:(BOOL)showProgress cancelButton:(BOOL)showCancel
+- (void)startSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText progressView:(BOOL)showProgress cancelButton:(BOOL)showCancel animated:(BOOL)animated
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeAction customCategories:@[AKD_UI] message:nil];
     
@@ -204,13 +206,15 @@
     if (showProgress) [self showSyncViewProgress];
     [self hideSyncViewCancelButton:NO withCompletionBlock:nil];
     [self setStatusBarStyle:[AKSystemInfo statusBarStyle]];
-    [UIView animateWithDuration:ANIMATION_DURATION delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
+    NSTimeInterval duration = 0.0;
+    if (animated) duration = ANIMATION_DURATION_FAST;
+    [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
         [AKSystemInfo setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     } completion:nil];
-    [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+    [UIView animateWithDuration:duration animations:^{
         [self.view setAlpha:1.0];
     } completion:^(BOOL finished){
-        if (showCancel) [self showSyncViewCancelButton:YES withCompletionBlock:nil];
+        if (showCancel) [self showSyncViewCancelButton:animated withCompletionBlock:nil];
     }];
 }
 
@@ -270,14 +274,14 @@
     }];
 }
 
-- (void)cancelSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText completionType:(SyncViewCompletionType)completionType alertController:(UIAlertController *)alertController delay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock
+- (void)cancelSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText animated:(BOOL)animated completionType:(SyncViewCompletionType)completionType alertController:(UIAlertController *)alertController delay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeAction customCategories:@[AKD_UI] message:nil];
     
     if ((!alertController) && (delay == 0.0))
     {
         [self hideSyncViewCancelButton:YES withCompletionBlock:^{
-            [self dismissWithDelay:delay completionBlock:completionBlock];
+            [self dismissWithDelay:delay animated:animated completionBlock:completionBlock];
         }];
         return;
     }
@@ -285,9 +289,6 @@
     [self.activityIndicatorView stopAnimating];
     [self setSyncViewPrimaryText:primaryText];
     [self setSyncViewSecondaryText:secondaryText];
-    [self.activityIndicatorView setAlpha:0.0];
-    [self hideSyncViewProgress];
-    [self setSyncViewProgress:0.0 animated:NO];
     switch (completionType) {
         case SyncViewComplete:
             [self.iconView setImage:[UIImage imageNamed:ICON_CHECK]];
@@ -313,16 +314,24 @@
             [self.iconView setImage:nil];
             break;
     }
-    [self.iconView setAlpha:1.0];
-    [self hideSyncViewCancelButton:YES withCompletionBlock:^{
+    NSTimeInterval duration = 0.0;
+    if (animated) duration = ANIMATION_DURATION_FAST;
+    [UIView animateWithDuration:duration animations:^{
+        [self.activityIndicatorView setAlpha:0.0];
+        [self.iconView setAlpha:1.0];
+        [self hideSyncViewProgress];
+    } completion:^(BOOL finished){
+        [self setSyncViewProgress:0.0 animated:NO];
+    }];
+    [self hideSyncViewCancelButton:animated withCompletionBlock:^{
         if (!alertController)
         {
-            [self dismissWithDelay:delay completionBlock:completionBlock];
+            [self dismissWithDelay:delay animated:animated completionBlock:completionBlock];
             return;
             
         }
         
-        [self presentViewController:alertController animated:YES completion:completionBlock];
+        [self presentViewController:alertController animated:animated completion:completionBlock];
     }];
 }
 
@@ -378,16 +387,18 @@
     if ([self.delegate respondsToSelector:@selector(syncViewCancelButtonWasTapped:)]) [self.delegate syncViewCancelButtonWasTapped:self];
 }
 
-- (void)dismissWithDelay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock
+- (void)dismissWithDelay:(NSTimeInterval)delay animated:(BOOL)animated completionBlock:(void (^)(void))completionBlock
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeUnspecified customCategories:@[AKD_UI] message:nil];
     
+    NSTimeInterval duration = 0.0;
+    if (animated) duration = ANIMATION_DURATION;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:ANIMATION_DURATION animations:^{
+        [UIView animateWithDuration:duration animations:^{
             [AKSystemInfo setStatusBarStyle:self.statusBarStyle];
         }];
     });
-    [UIView animateWithDuration:ANIMATION_DURATION delay:delay options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self.view setAlpha:0.0];
     } completion:^(BOOL finished){
         [self.view removeFromSuperview];

@@ -147,7 +147,7 @@ static char viewForSyncViewKey;
 
 #pragma mark - // PUBLIC METHODS (Actions) //
 
-- (void)startSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText progressView:(BOOL)showProgress cancelButton:(BOOL)showCancel
+- (void)startSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText progressView:(BOOL)showProgress cancelButton:(BOOL)showCancel animated:(BOOL)animated
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeUnspecified customCategories:@[AKD_UI] message:nil];
     
@@ -158,7 +158,7 @@ static char viewForSyncViewKey;
     }
     
     [self setIsSyncing:YES];
-    [self.syncViewController startSyncViewWithPrimaryText:primaryText secondaryText:secondaryText progressView:showProgress cancelButton:showCancel];
+    [self.syncViewController startSyncViewWithPrimaryText:primaryText secondaryText:secondaryText progressView:showProgress cancelButton:showCancel animated:animated];
     [self.viewForSyncView addSubview:self.syncViewController.view];
 }
 
@@ -197,7 +197,7 @@ static char viewForSyncViewKey;
     [self.syncViewController hideSyncViewCancelButton:animated withCompletionBlock:completionBlock];
 }
 
-- (void)cancelSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText completionType:(SyncViewCompletionType)completionType alertController:(UIAlertController *)alertController delay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock
+- (void)cancelSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText animated:(BOOL)animated completionType:(SyncViewCompletionType)completionType alertController:(UIAlertController *)alertController delay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock
 {
     [AKDebugger logMethod:METHOD_NAME logType:AKLogTypeMethodName methodType:AKMethodTypeUnspecified customCategories:@[AKD_UI] message:nil];
     
@@ -208,7 +208,7 @@ static char viewForSyncViewKey;
     }
     
     [self setIsSyncing:NO];
-    [self.syncViewController cancelSyncViewWithPrimaryText:primaryText secondaryText:secondaryText completionType:completionType alertController:alertController delay:delay completionBlock:completionBlock];
+    [self.syncViewController cancelSyncViewWithPrimaryText:primaryText secondaryText:secondaryText animated:animated completionType:completionType alertController:alertController delay:delay completionBlock:completionBlock];
 }
 
 #pragma mark - // DELEGATED METHODS //

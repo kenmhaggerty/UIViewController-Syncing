@@ -46,12 +46,12 @@ typedef enum {
 
 // ACTIONS //
 
-- (void)startSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText progressView:(BOOL)showProgress cancelButton:(BOOL)showCancel;
+- (void)startSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText progressView:(BOOL)showProgress cancelButton:(BOOL)showCancel animated:(BOOL)animated;
 - (void)showSyncViewProgress;
 - (void)hideSyncViewProgress;
 - (void)setSyncViewProgress:(float)progress animated:(BOOL)animated;
 - (void)showSyncViewCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock;
 - (void)hideSyncViewCancelButton:(BOOL)animated withCompletionBlock:(void (^)(void))completionBlock;
-- (void)cancelSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText completionType:(SyncViewCompletionType)completionType alertController:(UIAlertController *)alertController delay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock;
+- (void)cancelSyncViewWithPrimaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText animated:(BOOL)animated completionType:(SyncViewCompletionType)completionType alertController:(UIAlertController *)alertController delay:(NSTimeInterval)delay completionBlock:(void (^)(void))completionBlock;
 
 @end
