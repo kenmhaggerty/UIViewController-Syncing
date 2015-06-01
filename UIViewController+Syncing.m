@@ -13,20 +13,9 @@
 #import "UIViewController+Syncing.h"
 #import "AKDebugger.h"
 #import "AKGenerics.h"
-#import "AKSystemInfo.h"
 #import <objc/runtime.h>
 
 #pragma mark - // DEFINITIONS (Private) //
-
-#define DEFAULT_PROGRESSVIEW_VISIBLE NO
-#define DEFAULT_CANCEL_VISIBLE NO
-
-#define DEFAULT_DELAY 0.33
-
-#define STATUSLABEL_FONT_NAME_IOS_6 @"HelveticaNeue-Light"
-#define STATUSLABEL_FONT_NAME_IOS_7 @"HelveticaNeue-Thin"
-
-#define BUTTON_FONT_NAME @"HelveticaNeue-Light"
 
 static char syncViewControllerKey;
 static char isSyncingKey;
@@ -85,7 +74,7 @@ static char viewForSyncViewKey;
     UIView *viewForSyncView = objc_getAssociatedObject(self, &viewForSyncViewKey);
     if (!viewForSyncView)
     {
-        viewForSyncView = [[[[UIApplication sharedApplication] delegate] window] rootViewController].view;
+        viewForSyncView = [AKGenerics fullscreenWindow];
         [self setViewForSyncView:viewForSyncView];
     }
     return viewForSyncView;
