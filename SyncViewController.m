@@ -13,7 +13,7 @@
 #import "SyncViewController.h"
 #import "AKDebugger.h"
 #import "AKGenerics.h"
-#import "AKSystemInfo.h"
+#import "SystemInfo.h"
 
 #pragma mark - // DEFINITIONS (Private) //
 
@@ -205,11 +205,11 @@
     else [self hideSyncViewProgress];
     if (showProgress) [self showSyncViewProgress];
     [self hideSyncViewCancelButton:NO withCompletionBlock:nil];
-    [self setStatusBarStyle:[AKSystemInfo statusBarStyle]];
+    [self setStatusBarStyle:[SystemInfo statusBarStyle]];
     NSTimeInterval duration = 0.0;
     if (animated) duration = ANIMATION_DURATION_FAST;
     [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-        [AKSystemInfo setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+        [SystemInfo setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
     } completion:nil];
     [UIView animateWithDuration:duration animations:^{
         [self.view setAlpha:1.0];
@@ -395,7 +395,7 @@
     if (animated) duration = ANIMATION_DURATION;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:duration animations:^{
-            [AKSystemInfo setStatusBarStyle:self.statusBarStyle];
+            [SystemInfo setStatusBarStyle:self.statusBarStyle];
         }];
     });
     [UIView animateWithDuration:duration delay:delay options:UIViewAnimationOptionCurveEaseInOut animations:^{
